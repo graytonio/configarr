@@ -1,0 +1,9 @@
+sonarr:
+  address: sonarr
+  port: 8989
+radarr:
+  address: radarr
+  port: 7878
+prowlarr:
+  address: prowlarr
+  port: 9696

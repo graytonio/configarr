@@ -1,0 +1,15 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  dev-build:
+    cmds:
+      - goreleaser build --snapshot --rm-dist
+  default:
+    cmds:
+      - echo "{{.GREETING}}"
+    silent: true

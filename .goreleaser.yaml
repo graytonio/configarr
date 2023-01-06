@@ -27,5 +27,6 @@ changelog:
       - '^test:'
 dockers:
   - image_templates:
-      - graytonio/configarr:latest
-      - graytonio/configarr:{{ .Tag }}
+      - ghcr.io/graytonio/configarr:latest
+      - ghcr.io/graytonio/configarr:{{ .Tag }}
+

@@ -4,6 +4,8 @@ Unattended configuration tool for *arr apps.
 
 This is a cli tool that is designed to run in unattended setups of *arr apps to set configurations at startup.  While the tool can be used locally it is best utilized inside docker/kubernetes deployments.
 
+## TODO Document configuration file syntax and usage
+
 ## Usage
 
 ### Run Directly

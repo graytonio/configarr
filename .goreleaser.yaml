@@ -25,3 +25,7 @@ changelog:
     exclude:
       - '^docs:'
       - '^test:'
+dockers:
+  - image_templates:
+      - graytonio/configarr:latest
+      - graytonio/configarr:{{ .Tag }}

@@ -1,7 +1,10 @@
 package cmd
 
 import (
-	log "github.com/sirupsen/logrus"
+	"github.com/graytonio/configarr/internal/api"
+	"github.com/graytonio/configarr/internal/config"
+	"github.com/graytonio/configarr/internal/log"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -13,14 +16,17 @@ var (
 		Use:     "configarr",
 		Version: VersionString,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			// service, err := api.NewService("localhost", 7878)
-			// if err != nil {
-			// 	return err
-			// }
+			config := config.ParseConfig()
 
-			// log.Infof("API Key: %s\n", service.ApiKey)
-
-			log.Info(viper.AllKeys())
+			for _, service := range config.Services {
+				err := api.ApplyServiceConfig(&service)
+				if err != nil {
+					log.Logger.WithFields(logrus.Fields{
+						"error":     err.Error(),
+						"component": service.Name,
+					}).Error("Could Not Configure Service")
+				}
+			}
 
 			return nil
 		},
@@ -41,12 +47,17 @@ func init() {
 func initConfig() {
 	verbose, err := rootCmd.Flags().GetBool("verbose")
 	if err != nil {
-		log.Fatalf("Error parsing verbose flag: %s\n", err.Error())
+		log.Logger.WithField("error", err.Error()).Fatal("Error parsing verbose flag")
 	}
 
 	if verbose {
-		log.SetLevel(log.DebugLevel)
+		log.Logger.SetLevel(logrus.DebugLevel)
 	}
+
+	log.Logger.SetFormatter(&log.Formatter{
+		HideKeys:    !verbose,
+		FieldsOrder: []string{"component", "error"},
+	})
 
 	if cfgFile != "" {
 		viper.SetConfigFile(cfgFile)
@@ -59,8 +70,8 @@ func initConfig() {
 	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err == nil {
-		log.Debugf("Using config file: %s\n", viper.ConfigFileUsed())
+		log.Logger.WithField("config_file", viper.ConfigFileUsed()).Debug("Parsed Config File")
 	} else {
-		log.Errorf("Error reading config file: %s", err.Error())
+		log.Logger.WithField("error", err.Error()).Error("Error reading config file")
 	}
 }

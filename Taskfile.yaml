@@ -6,9 +6,9 @@ vars:
   GREETING: Hello, World!
 
 tasks:
-  dev-build:
+  build:
     cmds:
-      - goreleaser build --snapshot --rm-dist
+      - goreleaser build --snapshot --rm-dist --single-target
   default:
     cmds:
       - echo "{{.GREETING}}"

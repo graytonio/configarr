@@ -1,9 +1,37 @@
-sonarr:
-  address: sonarr
-  port: 8989
-radarr:
-  address: radarr
-  port: 7878
-prowlarr:
-  address: prowlarr
-  port: 9696
+services:
+  - name: sonarr
+    address: localhost
+    port: 8989
+    config:
+      rootfolder:
+      - name: TV
+        path: /app
+  - name: radarr
+    address: localhost
+    port: 7878
+    config:
+      rootfolder:
+      - name: Movies
+        path: /app
+  - name: prowlarr
+    address: localhost
+    port: 9696
+    config:
+      applications:
+        - name: sonarr
+          appType: Sonarr
+        - name: radarr
+          appType: Radarr
+      downloadclient:
+        - name: Transmission
+          appType: Transmission
+          fields:
+            - name: host
+              value: pirate-ship-transmission.default.svc
+        - name: NZBGet
+          appType: NZBget
+          fields:
+            - name: host
+              value: pirate-ship-nzbget.default.svc
+            - name: category
+              value: ""

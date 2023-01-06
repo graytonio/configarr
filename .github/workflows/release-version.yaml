@@ -21,6 +21,11 @@ jobs:
         with:
           go-version: '>=1.19.4'
           cache: true
+      - uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - uses: goreleaser/goreleaser-action@v4
         with:
           distribution: goreleaser

@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"errors"
+	"os"
+
 	"github.com/graytonio/configarr/internal/api"
 	"github.com/graytonio/configarr/internal/config"
 	"github.com/graytonio/configarr/internal/log"
@@ -11,12 +14,18 @@ import (
 
 var (
 	cfgFile       string
+	forceFlag     bool
 	VersionString string = "dev"
 	rootCmd              = &cobra.Command{
-		Use:     "configarr",
-		Version: VersionString,
+		SilenceUsage: true,
+		Use:          "configarr",
+		Version:      VersionString,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config := config.ParseConfig()
+			config, errs := config.ParseConfig()
+
+			if len(errs) > 0 && !forceFlag {
+				return errors.New("failed to initialize services")
+			}
 
 			for _, service := range config.Services {
 				err := api.ApplyServiceConfig(&service)
@@ -25,6 +34,10 @@ var (
 						"error":     err.Error(),
 						"component": service.Name,
 					}).Error("Could Not Configure Service")
+					log.Logger.WithField("forceFlag", forceFlag).Debug("Force Flag")
+					if !forceFlag {
+						return err
+					}
 				}
 			}
 
@@ -34,13 +47,17 @@ var (
 )
 
 func Execute() error {
-	return rootCmd.Execute()
+	if err := rootCmd.Execute(); err != nil {
+		os.Exit(1)
+	}
+	return nil
 }
 
 func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file default: ./config.yaml")
+	rootCmd.PersistentFlags().BoolVarP(&forceFlag, "force", "f", false, "Continue trying to configure services if one fails")
 	rootCmd.PersistentFlags().Bool("verbose", false, "Enable verbose logging")
 }
 

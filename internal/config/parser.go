@@ -5,7 +5,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func ParseConfig() *Config {
+func ParseConfig() (*Config, []error) {
 	log.Logger.WithField("component", "config").Info("Reading Config File")
 	var configData = Config{}
 	err := viper.Unmarshal(&configData)
@@ -14,11 +14,13 @@ func ParseConfig() *Config {
 	}
 
 	// Attempt to pull init data from each service do not continue if it fails
+	var errs []error
 	var goodServices []Service
 	for idx := range configData.Services {
 		err := configData.Services[idx].InitService()
 		if err != nil {
 			log.Logger.Errorf("Failed to setup service %s: %s", configData.Services[idx].Name, err.Error())
+			errs = append(errs, err)
 			continue
 		}
 		goodServices = append(goodServices, configData.Services[idx])
@@ -30,7 +32,7 @@ func ParseConfig() *Config {
 
 	populateProwlarrApplicationData(&configData)
 
-	return &configData
+	return &configData, errs
 }
 
 func populateProwlarrApplicationData(config *Config) {

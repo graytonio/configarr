@@ -145,3 +145,4 @@ services:
 ### TODO
 
 - [ ] Support Configuring Overseerr
+- [ ] Support waiting for applications to respond instead of failing

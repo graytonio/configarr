@@ -64,14 +64,18 @@ The services key defines each \*arr app and how they should be configured.
 | config.downloadClient | list   | List of downloadClients                                | False    |
 
 #### Root Folder Configuration
+
 ---
+
 | Key  | Type   | Description           | Required |
 | ---- | ------ | --------------------- | -------- |
 | name | string | Name of root folder   | True     |
 | path | string | Path for media folder | True     |
 
 #### Download Client Configuration
+
 ---
+
 | Key            | Type   | Description                                                                                                                             | Required |
 | -------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------- | -------- |
 | name           | string | Name of download client                                                                                                                 | True     |
@@ -89,9 +93,9 @@ For the fields each download client will have different parameters to set you ca
 Prowlarr has a special configuration parameter called applications. This configures which applications should have their indexers synced with Prowlarr.
 
 | Key     | Type   | Description                                                                                                                                     | Required |
-| ------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ---- |
-| name    | string | Name of another service configured (Must match exactly)                                                                                         | Required | True |
-| appType | string | Application type to configure ([API query to determine valid type](https://prowlarr.com/docs/api/#/Application/get_api_v1_applications_schema)) | Required | True |
+| ------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| name    | string | Name of another service configured (Must match exactly)                                                                                         | True     |
+| appType | string | Application type to configure ([API query to determine valid type](https://prowlarr.com/docs/api/#/Application/get_api_v1_applications_schema)) | True     |
 
 ### Example Config
 

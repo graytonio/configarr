@@ -12,6 +12,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+// TODO watch mode
+
 var (
 	cfgFile       string
 	forceFlag     bool
